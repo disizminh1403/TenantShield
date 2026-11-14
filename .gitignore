@@ -1,0 +1,35 @@
+.venv/
+venv/
+env/
+ENV/
+.conda/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.streamlit/secrets.*.toml
+*.log
+.coverage
+htmlcov/
+artifacts/
+.mypy_cache/
+.ipynb_checkpoints/
+build/
+dist/
+*.egg-info/
+.DS_Store
+Thumbs.db
+
+# Modeling inputs/artifacts are not used by this precomputed-score app.
+# Keep TenantShield_App_Data.csv: it is required at runtime.
+raw_data/
+data/raw/
+TenantShield_2026_Predictions_Working.csv
+TenantShield_Model_Ready.csv
+*.rds
+*.RData
+*.rda
