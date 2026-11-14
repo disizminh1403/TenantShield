@@ -104,9 +104,23 @@ a.ts-nav:hover, a.ts-nav:focus {background:#FFFFFF12; color:#FFF !important; out
     .ts-capture-chart {padding:14px;}
     .block-container {padding:3.3rem 1rem 2rem;}
     [data-testid="stHorizontalBlock"] {flex-wrap:wrap; gap:.85rem;}
-    [data-testid="stColumn"] {min-width:min(100%,280px) !important; flex:1 1 100% !important;}
+    [data-testid="stColumn"] {min-width:0 !important; flex:1 1 100% !important;}
     h1 {font-size:1.8rem !important;}
     .ts-gauge {height:195px;}
     .st-key-risk_gauge {min-height:195px;}
     .st-key-risk_gauge [data-testid="stElementContainer"]:has([data-testid="stMetric"]) {top:82px;}
 }
+.st-key-search_card button[kind="secondary"], .st-key-search_card button[kind="secondaryFormSubmit"] {
+    border:1px solid var(--navy); color:var(--navy); background:white;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, [role="combobox"]:focus-visible {
+    outline:2px solid #0F766E; outline-offset:3px;
+}
+[data-testid="stCaptionContainer"], .ts-risk-note {color:#475569;}
+h1, h2, [data-testid="stAlert"], [data-testid="stMetricValue"], [data-testid="stSelectbox"] {
+    overflow-wrap:anywhere;
+}
+.st-key-viewing_question,.st-key-method_why {
+    background:white; border-radius:16px;
+}
+.st-key-history_card [data-testid="stMetricValue"] {font-size:1.25rem;}

@@ -15,6 +15,9 @@ def test_methodology_navigation_metrics_and_return_to_lookup(monkeypatch):
         app = AppTest.from_file(str(ROOT / "app.py"), default_timeout=45).run()
         assert not app.exception
         assert any(link.label == "How TenantShield Works" for link in app.get("page_link"))
+        app.text_input[0].set_value("Jay St")
+        app.button(key="FormSubmitter:building_lookup-Search").click().run()
+        app.selectbox[0].select("316596").run()
         app.switch_page("pages/How_TenantShield_Works.py").run()
         assert not app.exception
         assert app.title[0].value == "How TenantShield Works"
@@ -28,8 +31,10 @@ def test_methodology_navigation_metrics_and_return_to_lookup(monkeypatch):
         assert "Violation features were excluded" in prose
         assert "not a reported random-selection experiment" in " ".join(item.value for item in app.caption)
         app.switch_page("app.py").run()
-        app.text_input[0].set_value("10 Jay St").run()
-        assert not app.exception and app.metric[0].value == "4.1%"
+        assert app.text_input[0].value == "Jay St"
+        assert app.selectbox[0].value == "316596"
+        assert not app.exception
+        assert any("4.1% estimated chance" in item.value for item in app.markdown)
 
 
 def test_capture_chart_denominator_scale_and_reported_values():

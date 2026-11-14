@@ -36,46 +36,40 @@ def section(title: str, symbol: str, anchor: str | None = None) -> None:
             f'src="data:image/svg+xml;base64,{encoded}">{escape(title)}</h3>')
 
 
-def gauge_svg(probability: float) -> str:
-    """A continuous 0–100% arc, not a categorical safety scale."""
-    if not 0 <= probability <= 1:
-        raise ValueError("Gauge requires a validated probability in [0,1].")
-    return (
-        '<svg class="ts-gauge" viewBox="0 0 320 210" role="img" '
-        'aria-label="Continuous probability scale from 0 to 100 percent">'
-        '<path d="M30 165 A130 130 0 0 1 290 165" fill="none" stroke="#EAF0F6" '
-        'stroke-width="18" stroke-linecap="round"/>'
-        '<path d="M30 165 A130 130 0 0 1 290 165" fill="none" stroke="#011F5B" '
-        f'stroke-width="18" pathLength="100" stroke-dasharray="{probability * 100:.8f} 100" '
-        'stroke-linecap="butt"/>'
-        '<text x="30" y="198" text-anchor="middle" fill="#64748B" font-size="12">0%</text>'
-        '<text x="290" y="198" text-anchor="middle" fill="#64748B" font-size="12">100%</text></svg>'
-    )
+def section_links(navigation: list[tuple[str, str, str]]) -> None:
+    with st.sidebar:
+        for label, symbol, anchor in navigation:
+            st.markdown(f'<a class="ts-nav" href="#{anchor}" target="_self">{icon(symbol)}{label}</a>',
+                        unsafe_allow_html=True)
+
+
+def explorer_sections() -> None:
+    section_links([
+        ("Complaint estimate", "risk", "risk-assessment"),
+        ("Complaint history", "history", "complaint-history"),
+        ("Building details", "building", "building-details"),
+        ("Viewing question", "method", "viewing-question"),
+        ("Location & imagery", "location", "building-location"),
+        ("Methodology", "method", "methodology"),
+    ])
 
 
 def apply_design(page: str = "dashboard") -> None:
     css = (Path(__file__).resolve().parents[1] / "assets" / "style.css").read_text(encoding="utf-8")
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     with st.sidebar:
-        st.markdown(f'<div class="ts-brand">{icon("shield")}<span>TenantShield<span class="ts-brand-dot">.</span></span></div>'
-                    '<div class="ts-brand-sub">BUILDING INTELLIGENCE</div>', unsafe_allow_html=True)
-        st.page_link("app.py", label="Building explorer", icon=":material/apartment:")
+        st.markdown(f'<div class="ts-brand">{icon("shield")}<span>TenantShield<span class="ts-brand-dot">.</span></span></div>',
+                    unsafe_allow_html=True)
+        st.page_link("app.py", label="Building Explorer", icon=":material/apartment:")
         st.page_link("pages/How_TenantShield_Works.py", label="How TenantShield Works", icon=":material/menu_book:")
-        st.markdown('<div class="ts-sidebar-label">ON THIS PAGE</div>', unsafe_allow_html=True)
-        navigation = [
-            ("Find a building", "search", "search"), ("Risk assessment", "risk", "risk-assessment"),
-            ("Building details", "building", "building-details"), ("Complaint history", "history", "complaint-history"),
-            ("Location & imagery", "location", "building-location"), ("Methodology", "method", "methodology"),
-        ] if page == "dashboard" else [
+    if page == "dashboard":
+        section_links([("Find a building", "search", "search")])
+    else:
+        section_links([
+            ("Why we built it", "method", "why-tenantshield"),
             ("What we predict", "risk", "prediction-target"),
+            ("Held-out evidence", "risk", "performance"),
             ("Data & method", "building", "data-method"),
             ("Evaluation", "history", "evaluation"),
-            ("Performance", "risk", "performance"),
             ("Responsible use", "shield", "responsible-use"),
-        ]
-        for label, symbol, anchor in navigation:
-            st.markdown(f'<a class="ts-nav" href="#{anchor}" target="_self">{icon(symbol)}{label}</a>', unsafe_allow_html=True)
-        st.markdown('<div class="ts-sidebar-note"><span class="ts-status-dot"></span> BROOKLYN, NEW YORK'
-                    '<h4>Know the building.<br>Understand the context.</h4>'
-                    '<p>2026–27 heating season<br>Building-level complaint estimates.</p>'
-                    '<small>Independent prototype.<br>No university affiliation or endorsement.</small></div>', unsafe_allow_html=True)
+        ])

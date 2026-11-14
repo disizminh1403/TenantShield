@@ -106,7 +106,7 @@ reconstructed from an R script.
 | PredictedRiskPercent | Present but unused; UI formats PredictedRisk directly |
 
 **History caveat:** History-availability flags are absent. A zero in a cleaned count may be
-an imputed missing value; the UI displays **“0 / unknown”**, never asserts observed zero.
+an imputed missing value. The UI displays **“Record status uncertain”** and explains why.
 Missing counts are unavailable. Optional `HasPriorSeasonHistory` / `HasTwoSeasonsHistory`
 columns are supported if a future export includes them. Neither missing history nor zero
 complaints proves good building conditions. Date labels follow the deployment handoff, not
@@ -143,9 +143,9 @@ internet access; local search and risk/history profiles work offline.
 
 ## Demo walkthrough
 
-1. Launch and search **10 Jay St** (real source record: BIN **3000002**, BuildingID **316596**).
-2. Its source prediction formats to **4.1%**. Explain that it concerns recorded building-wide complaints.
-3. Note the **0 / unknown** history labels, and open Methodology & limitations.
+1. Click **Try a sample building** to open **1035 Washington Avenue, Brooklyn** (BIN **3029731**, BuildingID **388518**).
+2. Its source estimate displays as **97.9%**. The CSV records 14 complaints for 2025–26 and 7 for 2024–25.
+3. Search **10 Jay St** to see how the app labels uncertain season records, then open **How TenantShield Works**.
 4. Search **Jay St** to demonstrate multiple matches and explicit building selection.
 5. Search by BIN **3000002** to return to the same record.
 6. Click **Load map & Street View** with a configured key to load both in one action.
@@ -156,20 +156,17 @@ internet access; local search and risk/history profiles work offline.
 
 ## UI and risk interpretation
 
-The selected building address is the page headline, with a large estimate and a comparison to
-the actual median `PredictedRisk` in the loaded cohort. The comparison uses the displayed precision
-(one decimal percentage point) and is explicitly a comparison of model scores, not observed rates,
-an apartment-level probability or a safety threshold. No low/medium/high safety categories are used.
-The CSV and prediction pipeline are unchanged.
+The Building Explorer leads with the address lookup and a one-click sample. A selected profile
+shows the address, a compact estimate, the scored cohort’s median `PredictedRisk`, and the building
+details and season records. The estimate and median each use one decimal percentage point.
 
 The navy sidebar provides in-page navigation with outline icons. Inter typography, white cards,
 subtle shadows and 16px corners sit on an off-white canvas. Red is a small brand accent, not a
 risk classification; teal distinguishes historical counts. No Penn/Wharton logos or endorsement
 claims are used. Inter loads from Google Fonts, with a system sans-serif fallback when offline.
 
-The semicircular gauge is a continuous 0–100% scale driven directly by `PredictedRisk`, with no
-category thresholds. Building characteristics and historical counts appear in compact cards
-below the risk summary, followed by the side-by-side map and Street View. Narrow screens stack the cards and controls.
+The viewing question follows the profile facts and comes before the map and Street View. Narrow
+screens stack the cards and controls.
 The location section reruns independently so its controls do not rerender the whole profile.
 The existing 24-hour geocoder cache is preserved. Google imagery is still transient display media,
 not persistently cached, and only an explicit load action makes an image request.
@@ -181,6 +178,11 @@ The dedicated page explains the target, data sources, six final predictors, chro
 evaluation, exact supplied 2025–26 test metrics, and limitations. Its capture chart compares
 56.3% top-decile recall with the approximately 10% theoretical expectation for random selection;
 it does not claim a new random-selection experiment or future validation results.
+
+The scoring handoff describes the fixed XGBoost specification refit through 2025–26.
+The app reads the bundled CSV’s `PredictedRisk` directly. The repository does not include the
+scoring script, fitted artifact, or export manifest needed to tie this file to an exact model
+version or extraction date.
 
 The native Streamlit page is `pages/How_TenantShield_Works.py`; supporting content and HTML
 figures are in `tenantshield/methodology.py`. It makes no geocoding or Google API calls and
