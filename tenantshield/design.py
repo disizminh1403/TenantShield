@@ -7,6 +7,34 @@ from pathlib import Path
 import streamlit as st
 
 
+ASSETS = Path(__file__).resolve().parents[1] / "assets"
+
+
+def branding_image(filename: str) -> str | None:
+    """Return the original PNG as a browser-ready URL, or omit missing artwork."""
+    try:
+        data = (ASSETS / filename).read_bytes()
+    except OSError:
+        return None
+    return f"data:image/png;base64,{base64.b64encode(data).decode('ascii')}"
+
+
+def configure_page() -> None:
+    st.set_page_config(
+        page_title="TenantShield | Brooklyn Housing Risk",
+        page_icon=branding_image("tenantshield_favicon.png") or ":material/apartment:",
+        layout="wide",
+        initial_sidebar_state="auto",
+    )
+
+
+def homepage_brand() -> None:
+    logo = branding_image("tenantshield_logo.png")
+    if logo:
+        st.html(f'<img class="ts-home-logo" src="{logo}" width="1536" height="512" '
+                'alt="TenantShield. Your Shield Against the Brooklyn Cold.">')
+
+
 # Small, consistent outline drawings in the Lucide visual style. No external icon runtime.
 ICONS = {
     "shield": '<path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z"/><path d="m8 12 3 3 5-6"/>',
@@ -55,11 +83,12 @@ def explorer_sections() -> None:
 
 
 def apply_design(page: str = "dashboard") -> None:
-    css = (Path(__file__).resolve().parents[1] / "assets" / "style.css").read_text(encoding="utf-8")
+    css = (ASSETS / "style.css").read_text(encoding="utf-8")
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     with st.sidebar:
-        st.markdown(f'<div class="ts-brand">{icon("shield")}<span>TenantShield<span class="ts-brand-dot">.</span></span></div>',
-                    unsafe_allow_html=True)
+        shield = branding_image("tenantshield_icon.png")
+        mark = f'<img class="ts-brand-shield" src="{shield}" alt="">' if shield else ""
+        st.html(f'<div class="ts-brand">{mark}<span>TenantShield<span class="ts-brand-dot">.</span></span></div>')
         st.page_link("app.py", label="Building Explorer", icon=":material/apartment:")
         st.page_link("pages/How_TenantShield_Works.py", label="How TenantShield Works", icon=":material/menu_book:")
     if page == "dashboard":

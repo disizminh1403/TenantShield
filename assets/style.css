@@ -52,7 +52,8 @@ a {color:var(--navy);}
 [data-testid="stSidebar"] [data-testid="stSidebarContent"] {background:var(--navy);}
 [data-testid="stSidebar"] button {color:white;}
 .ts-brand {display:flex; gap:11px; align-items:center; color:white; font-size:1.45rem; font-weight:750; letter-spacing:-.04em; padding:1rem 0 .35rem;}
-.ts-brand > .ts-icon {width:31px; height:31px;}
+.ts-brand-shield {display:block; width:36px; height:auto; flex:none;}
+.ts-home-logo {display:block; width:min(100%, 540px); height:auto; margin:0;}
 .ts-brand-dot {color:#E3A4A4;}
 .ts-brand-sub {font-size:.6rem; letter-spacing:.2em; color:#AEBED9; margin-left:42px; margin-bottom:2.2rem;}
 .ts-sidebar-label {font-size:.62rem; letter-spacing:.18em; font-weight:600; color:#99AECE; margin-bottom:.3rem;}

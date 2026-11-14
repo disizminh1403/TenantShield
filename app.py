@@ -10,7 +10,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from tenantshield.data import DataError, display_number, historical_count, load_data, normalize_address, search_buildings
-from tenantshield.design import apply_design, explorer_sections, section
+from tenantshield.design import apply_design, configure_page, explorer_sections, homepage_brand, section
 from tenantshield.maps import map_urls
 from tenantshield.services import ServiceError, geocode, street_view
 
@@ -19,8 +19,7 @@ ROOT = Path(__file__).resolve().parent
 SAMPLE_ADDRESS = "1035 WASHINGTON AVENUE, BROOKLYN"
 SAMPLE_ID = "388518"
 SAMPLE_BIN = "3029731"
-st.set_page_config(page_title="TenantShield | Building Explorer", page_icon=":material/apartment:",
-                   layout="wide", initial_sidebar_state="auto")
+configure_page()
 
 
 def setting(name: str, default: str = "") -> str:
@@ -244,6 +243,7 @@ def open_sample() -> None:
 
 def main() -> None:
     apply_design()
+    homepage_brand()
     st.title("Check a building’s heating history before you rent.")
     st.markdown("Look up a Brooklyn address to see the building’s recorded heat and hot-water complaints, "
                 "its estimated chance of a complaint in the 2026–27 heating season, and what to ask at your viewing.")

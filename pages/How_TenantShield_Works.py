@@ -2,11 +2,11 @@
 
 import streamlit as st
 
-from tenantshield.design import apply_design, section
+from tenantshield.design import apply_design, configure_page, section
 from tenantshield.methodology import FEATURES, METRICS, capture_chart, process_diagram, evaluation_timeline
 
 
-st.set_page_config(page_title="How TenantShield Works | TenantShield", page_icon=":material/menu_book:", layout="wide")
+configure_page()
 apply_design(page="methodology")
 
 st.title("How TenantShield Works")
