@@ -1,7 +1,8 @@
 from pathlib import Path
 from unittest.mock import patch
-import base64
+from io import BytesIO
 
+from PIL import Image
 from streamlit.testing.v1 import AppTest
 
 from tenantshield.services import Location, ServiceError, StreetImage
@@ -62,13 +63,14 @@ def test_combined_load_and_no_automatic_image_refetch(monkeypatch):
     assert app.button[0].label == "Load map & Street View"
     assert any("scored-cohort median" in element.value for element in app.markdown)
     location = Location(40.70, -73.99, "MOCK ADDRESS FOR TEST ONLY")
-    png = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aN1sAAAAASUVORK5CYII=")
-    image = StreetImage(png, "test date", "Google Maps")
+    output = BytesIO()
+    Image.new("RGB", (2, 2), color=(1, 31, 91)).save(output, format="JPEG")
+    image = StreetImage(output.getvalue(), "test date", "Google Maps")
     with patch("tenantshield.services.geocode", return_value=[location]) as geocoder, \
             patch("tenantshield.services.street_view", return_value=image) as imagery:
         app.button[0].click().run()
         assert not app.exception and len(app.get("iframe")) == 1
-        assert len(app.get("imgs")) == 1
+        assert len(app.image) == 1
         assert imagery.call_count == 1 and geocoder.call_count == 1
         app.run()
         assert imagery.call_count == 1  # Rerenders do not spend API quota.
@@ -101,7 +103,7 @@ def test_street_view_failure_shows_warning_without_broken_image(monkeypatch):
             patch("tenantshield.services.street_view", side_effect=ServiceError("Google returned an invalid image.")):
         app.button[0].click().run()
     assert not app.exception
-    assert not app.get("imgs")
+    assert len(app.image) == 0
     assert any("invalid image" in warning.value for warning in app.warning)
 
 
@@ -116,7 +118,7 @@ def test_street_view_render_failure_shows_warning(monkeypatch):
             patch("streamlit.image", side_effect=OSError("test-only render failure")):
         app.button[0].click().run()
     assert not app.exception
-    assert not app.get("imgs")
+    assert len(app.image) == 0
     assert any("could not be displayed" in warning.value for warning in app.warning)
 
 

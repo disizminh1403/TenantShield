@@ -1,6 +1,6 @@
 # Direct runtime dependencies pinned to the locally tested versions.
 # Python >=3.11; see DEPLOYMENT_AUDIT.md for the tested interpreter.
-streamlit==1.58.0
+streamlit==1.61.1
 pandas==3.0.3
 requests==2.34.2
 Pillow==12.3.0
