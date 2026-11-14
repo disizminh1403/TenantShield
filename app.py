@@ -160,10 +160,14 @@ def location_panel(row: pd.Series) -> None:
                     st.info("Street View unavailable — no suitable outdoor imagery was found nearby.")
                 else:
                     # Pass bytes, never a key-bearing Google URL. No cache/session persistence.
-                    st.image(image.content, caption=f"Google Maps · {image.date} · {image.copyright}",
-                             width="stretch")
+                    try:
+                        st.image(image.content, caption=f"Google Maps · {image.date} · {image.copyright}",
+                                 width="stretch")
+                    except (OSError, SyntaxError, ValueError):
+                        st.warning("Street View unavailable — the returned image could not be displayed.")
             except ServiceError as exc:
-                st.warning(f"Street View unavailable. {exc}")
+                message = str(exc)
+                st.warning(message if message.startswith("Street View unavailable") else f"Street View unavailable. {message}")
         else:
             st.info("Load a nearby image on demand. Imagery is supplied by Google Maps.")
 

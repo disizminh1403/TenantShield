@@ -92,6 +92,34 @@ def test_map_only_opt_out_with_configured_key(monkeypatch):
         imagery.assert_not_called()
 
 
+def test_street_view_failure_shows_warning_without_broken_image(monkeypatch):
+    monkeypatch.setenv("GOOGLE_MAPS_API_KEY", "test-only-key")
+    app = AppTest.from_file(str(APP), default_timeout=45).run()
+    app.text_input[0].set_value("25 Jay Street").run()
+    location = Location(40.70, -73.99, "MOCK ADDRESS FOR TEST ONLY")
+    with patch("tenantshield.services.geocode", return_value=[location]), \
+            patch("tenantshield.services.street_view", side_effect=ServiceError("Google returned an invalid image.")):
+        app.button[0].click().run()
+    assert not app.exception
+    assert not app.get("imgs")
+    assert any("invalid image" in warning.value for warning in app.warning)
+
+
+def test_street_view_render_failure_shows_warning(monkeypatch):
+    monkeypatch.setenv("GOOGLE_MAPS_API_KEY", "test-only-key")
+    app = AppTest.from_file(str(APP), default_timeout=45).run()
+    app.text_input[0].set_value("25 Jay Street").run()
+    location = Location(40.70, -73.99, "MOCK ADDRESS FOR TEST ONLY")
+    image = StreetImage(b"test-only-content", "test date", "Google Maps")
+    with patch("tenantshield.services.geocode", return_value=[location]), \
+            patch("tenantshield.services.street_view", return_value=image), \
+            patch("streamlit.image", side_effect=OSError("test-only render failure")):
+        app.button[0].click().run()
+    assert not app.exception
+    assert not app.get("imgs")
+    assert any("could not be displayed" in warning.value for warning in app.warning)
+
+
 def test_ambiguous_geocoding_requires_selection_before_imagery(monkeypatch):
     monkeypatch.setenv("GOOGLE_MAPS_API_KEY", "test-only-key")
     app = AppTest.from_file(str(APP), default_timeout=45).run()

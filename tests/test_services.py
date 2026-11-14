@@ -1,13 +1,24 @@
+from io import BytesIO
 from unittest.mock import Mock, patch
 
 import pytest
+from PIL import Image
 import requests
 
 from tenantshield import services
 from tenantshield.services import Location, ServiceError, geocode, street_view
 
 
-def response(payload=None, content=b"image bytes", content_type="image/jpeg"):
+def valid_png() -> bytes:
+    output = BytesIO()
+    Image.new("RGB", (2, 2), color=(1, 2, 3)).save(output, format="PNG")
+    return output.getvalue()
+
+
+VALID_PNG = valid_png()
+
+
+def response(payload=None, content=VALID_PNG, content_type="image/png"):
     result = Mock()
     result.json.return_value = payload
     result.content = content
@@ -72,7 +83,37 @@ def test_metadata_precedes_image_and_heading_points_toward_building():
     params = get.call_args_list[1].kwargs["params"]
     assert params["pano"] == "test-pano" and params["heading"] == 0
     assert params["return_error_code"] == "true"
-    assert image.content == b"image bytes" and image.date == "2025-01"
+    assert image.content == VALID_PNG and image.date == "2025-01"
+
+
+@pytest.mark.parametrize(
+    ("content", "content_type", "message"),
+    [
+        (b"", "image/jpeg", "empty image"),
+        (b"not an image", "image/jpeg", "invalid image"),
+        (VALID_PNG, "text/plain", "non-image content"),
+        (VALID_PNG, "image/jpeg", "invalid image"),
+    ],
+)
+def test_rejects_unusable_image_payloads(content, content_type, message):
+    metadata = {"status": "OK", "pano_id": "test-pano", "location": {"lat": 40.7, "lng": -73.99}}
+    with patch.object(
+        services.requests, "get",
+        side_effect=[response(metadata), response(content=content, content_type=content_type)],
+    ):
+        with pytest.raises(ServiceError, match=message):
+            street_view("key", Location(40.7, -73.99, "selected"))
+
+
+def test_http_failure_reports_status_without_exposing_key():
+    denied = Mock(status_code=403)
+    denied.raise_for_status.side_effect = requests.HTTPError(response=denied)
+    with patch.object(services.requests, "get", return_value=denied):
+        with pytest.raises(ServiceError) as error:
+            street_view("SECRET", Location(40.7, -73.99, "selected"))
+    assert error.value.status_code == 403
+    assert "HTTP 403" in str(error.value)
+    assert "SECRET" not in str(error.value)
 
 
 def test_reject_distant_panorama():

@@ -1,10 +1,12 @@
 """Server-only requests. Never return request URLs or raw provider errors to the UI."""
 
 from dataclasses import dataclass
+from io import BytesIO
 import math
 import threading
 import time
 
+from PIL import Image
 import requests
 
 
@@ -16,7 +18,9 @@ _last_census_call = 0.0
 
 
 class ServiceError(RuntimeError):
-    pass
+    def __init__(self, message: str, status_code: int | None = None):
+        super().__init__(message)
+        self.status_code = status_code
 
 
 @dataclass(frozen=True)
@@ -41,6 +45,14 @@ def _get(url: str, params: dict) -> requests.Response:
         )
         response.raise_for_status()
         return response
+    except requests.HTTPError as exc:
+        status = getattr(exc.response, "status_code", None)
+        if isinstance(status, int):
+            raise ServiceError(
+                f"The provider rejected the request (HTTP {status}). Check API access, key restrictions, billing and quota.",
+                status_code=status,
+            ) from None
+        raise ServiceError("The provider rejected the request. Check API access, key restrictions, billing and quota.") from None
     except requests.RequestException:
         # Requests exceptions often contain the complete URL, including the key.
         raise ServiceError("The location service is unavailable. Please try again later.") from None
@@ -94,6 +106,33 @@ def _bearing(start: Location, end: Location) -> float:
     )) % 360
 
 
+def _validated_image(response: requests.Response) -> bytes:
+    """Decode provider bytes before Streamlit creates a browser media URL."""
+    content_type = response.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
+    if not content_type.startswith("image/"):
+        raise ServiceError("Street View unavailable: Google returned non-image content.")
+    content = response.content
+    if not isinstance(content, bytes) or not content:
+        raise ServiceError("Street View unavailable: Google returned an empty image.")
+    if len(content) > 10 * 1024 * 1024:
+        raise ServiceError("Street View unavailable: Google returned an unexpectedly large image.")
+    try:
+        with Image.open(BytesIO(content)) as image:
+            image_format = image.format
+            width, height = image.size
+            image.verify()
+        # verify() checks the container; load() forces a full pixel decode and
+        # catches truncated payloads that can otherwise become broken <img> tags.
+        with Image.open(BytesIO(content)) as image:
+            image.load()
+    except (OSError, SyntaxError, ValueError):
+        raise ServiceError("Street View unavailable: Google returned an invalid image.") from None
+    expected_type = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}.get(image_format)
+    if width < 1 or height < 1 or expected_type != content_type:
+        raise ServiceError("Street View unavailable: Google returned an invalid image.")
+    return content
+
+
 def street_view(key: str, location: Location) -> StreetImage | None:
     if not key:
         return None
@@ -123,7 +162,6 @@ def street_view(key: str, location: Location) -> StreetImage | None:
         "key": key, "pano": pano, "size": "640x400", "fov": 80, "pitch": 0,
         "heading": round(_bearing(camera, location), 1), "return_error_code": "true",
     })
-    if not response.headers.get("Content-Type", "").lower().startswith("image/"):
-        raise ServiceError("Street View unavailable: the service did not return an image.")
-    return StreetImage(response.content, str(metadata.get("date", "Date unavailable")),
+    content = _validated_image(response)
+    return StreetImage(content, str(metadata.get("date", "Date unavailable")),
                        str(metadata.get("copyright", "Google Maps")))
