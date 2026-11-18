@@ -1,0 +1,3 @@
+# Offline pipeline only. The web app does not need these.
+-r ../../requirements.txt
+scikit-learn==1.9.1

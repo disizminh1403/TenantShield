@@ -1,0 +1,752 @@
+{
+ "generated": "2026-11-18",
+ "history_check": {
+  "2025–26": {
+   "csv_column": "PastComplaints_Clean",
+   "csv_total": 91393,
+   "oct_to_may": {
+    "exact_match_share": 0.9999926126751719,
+    "extract_total": 91395,
+    "buildings_differing": 1
+   },
+   "oct_to_sep": {
+    "exact_match_share": 0.9863703856922292,
+    "extract_total": 96821,
+    "buildings_differing": 1845
+   }
+  },
+  "2024–25": {
+   "csv_column": "Complaints2SeasonsAgo_Clean",
+   "csv_total": 73469,
+   "oct_to_may": {
+    "exact_match_share": 0.9888673014841135,
+    "extract_total": 69956,
+    "buildings_differing": 1507
+   },
+   "oct_to_sep": {
+    "exact_match_share": 0.9998005422296424,
+    "extract_total": 73536,
+    "buildings_differing": 27
+   }
+  }
+ },
+ "data_through": "2026-11-17",
+ "chronic_threshold": 5,
+ "train_seasons": [
+  "2023–24",
+  "2024–25"
+ ],
+ "test_season": "2025–26",
+ "deploy_season": "2026–27",
+ "features": {
+  "original_six": [
+   "c1",
+   "c2",
+   "log_units",
+   "missing_units",
+   "has1",
+   "has2"
+  ],
+  "expanded": [
+   "c1",
+   "c2",
+   "c3",
+   "apts1",
+   "bw1",
+   "months1",
+   "off1",
+   "units",
+   "stories",
+   "year",
+   "zip_rate1"
+  ],
+  "nowcast": [
+   "c1",
+   "c2",
+   "c3",
+   "apts1",
+   "bw1",
+   "months1",
+   "off1",
+   "units",
+   "stories",
+   "year",
+   "zip_rate1",
+   "todate",
+   "todate_apts"
+  ]
+ },
+ "backtest": {
+  "any_complaint": [
+   {
+    "features": "Original six inputs",
+    "model": "Gradient boosting",
+    "n": 135367,
+    "positives": 13327,
+    "prevalence": 0.09845087798355581,
+    "roc_auc": 0.833062169316561,
+    "pr_auc": 0.5768588515172868,
+    "log_loss": 0.2215403831597054,
+    "brier": 0.05936134406773642,
+    "top_decile_precision": 0.5473552009456265,
+    "top_decile_recall": 0.555939071058753
+   },
+   {
+    "features": "Original six inputs",
+    "model": "Random forest",
+    "n": 135367,
+    "positives": 13327,
+    "prevalence": 0.09845087798355581,
+    "roc_auc": 0.8333487570189745,
+    "pr_auc": 0.5775079014702349,
+    "log_loss": 0.22179465206663954,
+    "brier": 0.059402928450417454,
+    "top_decile_precision": 0.550531914893617,
+    "top_decile_recall": 0.5591656036617393
+   },
+   {
+    "features": "Original six inputs",
+    "model": "Logistic regression",
+    "n": 135367,
+    "positives": 13327,
+    "prevalence": 0.09845087798355581,
+    "roc_auc": 0.826343972334745,
+    "pr_auc": 0.570294911452261,
+    "log_loss": 0.227488921536816,
+    "brier": 0.06105728715481628,
+    "top_decile_precision": 0.5427748226950354,
+    "top_decile_recall": 0.5512868612590981
+   },
+   {
+    "features": "Expanded history",
+    "model": "Gradient boosting",
+    "n": 135367,
+    "positives": 13327,
+    "prevalence": 0.09845087798355581,
+    "roc_auc": 0.8535738088546829,
+    "pr_auc": 0.6084025374443376,
+    "log_loss": 0.21389734449124134,
+    "brier": 0.05755927020058549,
+    "top_decile_precision": 0.5653812056737588,
+    "top_decile_recall": 0.5742477676896526
+   },
+   {
+    "features": "Expanded history",
+    "model": "Random forest",
+    "n": 135367,
+    "positives": 13327,
+    "prevalence": 0.09845087798355581,
+    "roc_auc": 0.8454534921418055,
+    "pr_auc": 0.6050539535603529,
+    "log_loss": 0.21596745465212183,
+    "brier": 0.057667583541238784,
+    "top_decile_precision": 0.5646424349881797,
+    "top_decile_recall": 0.5734974112703534
+   },
+   {
+    "features": "Expanded history",
+    "model": "Logistic regression",
+    "n": 135367,
+    "positives": 13327,
+    "prevalence": 0.09845087798355581,
+    "roc_auc": 0.8403110623932799,
+    "pr_auc": 0.5964017761192482,
+    "log_loss": 0.22095490289899025,
+    "brier": 0.05931000500548895,
+    "top_decile_precision": 0.5524527186761229,
+    "top_decile_recall": 0.5611165303519171
+   }
+  ],
+  "chronic": [
+   {
+    "features": "Expanded history",
+    "model": "Gradient boosting",
+    "n": 135367,
+    "positives": 3891,
+    "prevalence": 0.028744080905981517,
+    "roc_auc": 0.9507662097317873,
+    "pr_auc": 0.6247599522083801,
+    "log_loss": 0.06316226310682983,
+    "brier": 0.01638507747468627,
+    "top_decile_precision": 0.24977836879432624,
+    "top_decile_recall": 0.8689282960678488
+   },
+   {
+    "features": "Expanded history",
+    "model": "Random forest",
+    "n": 135367,
+    "positives": 3891,
+    "prevalence": 0.028744080905981517,
+    "roc_auc": 0.9457710107659372,
+    "pr_auc": 0.6236201443587931,
+    "log_loss": 0.06432027069113022,
+    "brier": 0.016408735737178208,
+    "top_decile_precision": 0.24852245862884162,
+    "top_decile_recall": 0.8645592392701105
+   },
+   {
+    "features": "Expanded history",
+    "model": "Logistic regression",
+    "n": 135367,
+    "positives": 3891,
+    "prevalence": 0.028744080905981517,
+    "roc_auc": 0.9442985281892726,
+    "pr_auc": 0.617588292321571,
+    "log_loss": 0.06667207115325531,
+    "brier": 0.016838452085015415,
+    "top_decile_precision": 0.24593676122931443,
+    "top_decile_recall": 0.8555641223335904
+   }
+  ],
+  "chronic_rule_same_as_last_season": {
+   "flagged": 3099,
+   "precision": 0.5940626008389803,
+   "recall": 0.4731431508609612
+  },
+  "rest_of_season": [
+   {
+    "features": "Pre-season only",
+    "model": "Gradient boosting",
+    "n": 135367,
+    "positives": 11948,
+    "prevalence": 0.08826375704566106,
+    "roc_auc": 0.8542768517732198,
+    "pr_auc": 0.5817057093708449,
+    "log_loss": 0.2009837313120704,
+    "brier": 0.053668875600760696,
+    "top_decile_precision": 0.5149970449172577,
+    "top_decile_recall": 0.5834449280214262
+   },
+   {
+    "features": "With season to date",
+    "model": "Gradient boosting",
+    "n": 135367,
+    "positives": 11948,
+    "prevalence": 0.08826375704566106,
+    "roc_auc": 0.8620798334739865,
+    "pr_auc": 0.6030677206242006,
+    "log_loss": 0.19493144544190022,
+    "brier": 0.05191333421398153,
+    "top_decile_precision": 0.5319148936170213,
+    "top_decile_recall": 0.6026113157013726
+   }
+  ],
+  "chronic_reliability": [
+   {
+    "low": 0.0,
+    "high": 0.02,
+    "n": 121028,
+    "mean_score": 0.0029669059397423457,
+    "observed_rate": 0.004023862246752817
+   },
+   {
+    "low": 0.02,
+    "high": 0.05,
+    "n": 5334,
+    "mean_score": 0.030874711951942493,
+    "observed_rate": 0.051368578927634044
+   },
+   {
+    "low": 0.05,
+    "high": 0.1,
+    "n": 2425,
+    "mean_score": 0.07144084846264301,
+    "observed_rate": 0.1043298969072165
+   },
+   {
+    "low": 0.1,
+    "high": 0.2,
+    "n": 2166,
+    "mean_score": 0.1432240505081571,
+    "observed_rate": 0.19298245614035087
+   },
+   {
+    "low": 0.2,
+    "high": 0.35,
+    "n": 1632,
+    "mean_score": 0.2671013924445977,
+    "observed_rate": 0.34558823529411764
+   },
+   {
+    "low": 0.35,
+    "high": 0.5,
+    "n": 938,
+    "mean_score": 0.4176621867618957,
+    "observed_rate": 0.4914712153518124
+   },
+   {
+    "low": 0.5,
+    "high": 0.7,
+    "n": 840,
+    "mean_score": 0.5964979235157898,
+    "observed_rate": 0.6583333333333333
+   },
+   {
+    "low": 0.7,
+    "high": 0.85,
+    "n": 518,
+    "mean_score": 0.7690141162129063,
+    "observed_rate": 0.8108108108108109
+   },
+   {
+    "low": 0.85,
+    "high": 1.0,
+    "n": 486,
+    "mean_score": 0.9271197165394023,
+    "observed_rate": 0.948559670781893
+   }
+  ],
+  "rest_reliability": [
+   {
+    "low": 0.0,
+    "high": 0.02,
+    "n": 49781,
+    "mean_score": 0.016249085742007886,
+    "observed_rate": 0.018039010867600087
+   },
+   {
+    "low": 0.02,
+    "high": 0.05,
+    "n": 56030,
+    "mean_score": 0.027332313376045785,
+    "observed_rate": 0.03539175441727646
+   },
+   {
+    "low": 0.05,
+    "high": 0.1,
+    "n": 12508,
+    "mean_score": 0.07120365036450808,
+    "observed_rate": 0.1016949152542373
+   },
+   {
+    "low": 0.1,
+    "high": 0.2,
+    "n": 5858,
+    "mean_score": 0.14227502660788705,
+    "observed_rate": 0.19187435984977808
+   },
+   {
+    "low": 0.2,
+    "high": 0.35,
+    "n": 3518,
+    "mean_score": 0.26740875050866647,
+    "observed_rate": 0.3450824332006822
+   },
+   {
+    "low": 0.35,
+    "high": 0.5,
+    "n": 2137,
+    "mean_score": 0.42260162683296154,
+    "observed_rate": 0.49134300421151145
+   },
+   {
+    "low": 0.5,
+    "high": 0.7,
+    "n": 2160,
+    "mean_score": 0.5968854263400433,
+    "observed_rate": 0.6569444444444444
+   },
+   {
+    "low": 0.7,
+    "high": 0.85,
+    "n": 1541,
+    "mean_score": 0.7759942978344891,
+    "observed_rate": 0.8105126541207008
+   },
+   {
+    "low": 0.85,
+    "high": 1.0,
+    "n": 1834,
+    "mean_score": 0.9331201972746436,
+    "observed_rate": 0.9482006543075245
+   }
+  ],
+  "chronic_importance": [
+   {
+    "feature": "c1",
+    "pr_auc_drop": 0.10219684397346858
+   },
+   {
+    "feature": "units",
+    "pr_auc_drop": 0.062415154592608525
+   },
+   {
+    "feature": "off1",
+    "pr_auc_drop": 0.017629963014529015
+   },
+   {
+    "feature": "c3",
+    "pr_auc_drop": 0.014016559573617434
+   },
+   {
+    "feature": "c2",
+    "pr_auc_drop": 0.012105593955479462
+   },
+   {
+    "feature": "months1",
+    "pr_auc_drop": 0.010422083574019895
+   },
+   {
+    "feature": "zip_rate1",
+    "pr_auc_drop": 0.004300031819539714
+   },
+   {
+    "feature": "year",
+    "pr_auc_drop": 0.002189319834056569
+   },
+   {
+    "feature": "bw1",
+    "pr_auc_drop": 0.001796473626056579
+   },
+   {
+    "feature": "stories",
+    "pr_auc_drop": 0.0007049744859617771
+   },
+   {
+    "feature": "apts1",
+    "pr_auc_drop": -0.00010061649452985932
+   }
+  ],
+  "count": {
+   "mae_model": 0.5962902744751118,
+   "mae_same_as_last_season": 0.6080137699734796,
+   "poisson_deviance_model": 1.4237319299711055,
+   "poisson_deviance_training_mean": 4.7422523312285865,
+   "total_expected": 71436.1559905704,
+   "total_actual": 91395,
+   "top_decile_share_of_complaints": 0.8641610591389026,
+   "bins": [
+    {
+     "low": 0.0,
+     "high": 0.1,
+     "n": 102615,
+     "mean_expected": 0.04112088366667073,
+     "mean_actual": 0.06042976173074112,
+     "p25": 0.0,
+     "p50": 0.0,
+     "p75": 0.0,
+     "p90": 0.0
+    },
+    {
+     "low": 0.1,
+     "high": 0.25,
+     "n": 15156,
+     "mean_expected": 0.1547635580023733,
+     "mean_actual": 0.2690683557666931,
+     "p25": 0.0,
+     "p50": 0.0,
+     "p75": 0.0,
+     "p90": 1.0
+    },
+    {
+     "low": 0.25,
+     "high": 0.5,
+     "n": 6025,
+     "mean_expected": 0.3405345951964327,
+     "mean_actual": 0.6087966804979253,
+     "p25": 0.0,
+     "p50": 0.0,
+     "p75": 0.0,
+     "p90": 2.0
+    },
+    {
+     "low": 0.5,
+     "high": 1.0,
+     "n": 3685,
+     "mean_expected": 0.7014345616692288,
+     "mean_actual": 1.1924016282225238,
+     "p25": 0.0,
+     "p50": 0.0,
+     "p75": 1.0,
+     "p90": 3.0
+    },
+    {
+     "low": 1.0,
+     "high": 2.0,
+     "n": 2669,
+     "mean_expected": 1.4073300207068575,
+     "mean_actual": 2.4454852004496064,
+     "p25": 0.0,
+     "p50": 1.0,
+     "p75": 3.0,
+     "p90": 6.0
+    },
+    {
+     "low": 2.0,
+     "high": 5.0,
+     "n": 2598,
+     "mean_expected": 3.1801483939265593,
+     "mean_actual": 4.7809853733641265,
+     "p25": 0.0,
+     "p50": 2.0,
+     "p75": 6.0,
+     "p90": 12.0
+    },
+    {
+     "low": 5.0,
+     "high": 10.0,
+     "n": 1246,
+     "mean_expected": 6.987514357449739,
+     "mean_actual": 9.304173354735152,
+     "p25": 2.0,
+     "p50": 5.0,
+     "p75": 11.0,
+     "p90": 22.0
+    },
+    {
+     "low": 10.0,
+     "high": 20.0,
+     "n": 761,
+     "mean_expected": 13.940594942726438,
+     "mean_actual": 16.1484888304862,
+     "p25": 4.0,
+     "p50": 11.0,
+     "p75": 19.0,
+     "p90": 36.0
+    },
+    {
+     "low": 20.0,
+     "high": 50.0,
+     "n": 450,
+     "mean_expected": 30.246489733807806,
+     "mean_actual": 31.595555555555556,
+     "p25": 10.0,
+     "p50": 21.0,
+     "p75": 38.0,
+     "p90": 59.10000000000002
+    },
+    {
+     "low": 50.0,
+     "high": null,
+     "n": 162,
+     "mean_expected": 94.38325529952408,
+     "mean_actual": 98.80246913580247,
+     "p25": 34.25,
+     "p50": 63.0,
+     "p75": 111.25,
+     "p90": 222.4000000000001
+    }
+   ]
+  }
+ },
+ "replication_check": {
+  "note": "A Python gradient-boosting model refit on the original six inputs, compared with the R/XGBoost PredictedRisk already in the app CSV. Agreement supports the data reconstruction.",
+  "pearson": 0.9977560177999042,
+  "spearman": 0.9978364797549074,
+  "mean_abs_difference": 0.0029260770086028186
+ },
+ "early_season_check": {
+  "window": "2026-10-01 through 2026-11-17",
+  "n": 135367,
+  "positives": 4324,
+  "prevalence": 0.031942792556531506,
+  "roc_auc": 0.89608816588249,
+  "pr_auc": 0.4351180111171886,
+  "top_decile_precision": 0.23803191489361702,
+  "top_decile_recall": 0.7451433857539316,
+  "reliability": [
+   {
+    "low": 0.0,
+    "high": 0.05,
+    "n": 99025,
+    "mean_score": 0.028655919911670397,
+    "observed_rate": 0.005231002272153497
+   },
+   {
+    "low": 0.05,
+    "high": 0.1,
+    "n": 15575,
+    "mean_score": 0.08072585113191104,
+    "observed_rate": 0.02086677367576244
+   },
+   {
+    "low": 0.1,
+    "high": 0.2,
+    "n": 7164,
+    "mean_score": 0.1561677894908113,
+    "observed_rate": 0.03573422668900056
+   },
+   {
+    "low": 0.2,
+    "high": 0.35,
+    "n": 3962,
+    "mean_score": 0.2736662141922325,
+    "observed_rate": 0.0734477536597678
+   },
+   {
+    "low": 0.35,
+    "high": 0.5,
+    "n": 2622,
+    "mean_score": 0.4260194244432959,
+    "observed_rate": 0.12509534706331046
+   },
+   {
+    "low": 0.5,
+    "high": 0.7,
+    "n": 2624,
+    "mean_score": 0.5937422750881169,
+    "observed_rate": 0.2027439024390244
+   },
+   {
+    "low": 0.7,
+    "high": 0.85,
+    "n": 1852,
+    "mean_score": 0.7746765052268109,
+    "observed_rate": 0.32937365010799136
+   },
+   {
+    "low": 0.85,
+    "high": 1.0,
+    "n": 2543,
+    "mean_score": 0.9385439219364162,
+    "observed_rate": 0.5756979944946913
+   }
+  ]
+ },
+ "seasons": [
+  {
+   "season": "2023–24",
+   "buildings": 135052,
+   "complaints": 59264,
+   "any_rate": 0.07729615259307526,
+   "chronic_rate": 0.02039214524775642,
+   "share_of_complaints_from_chronic": 0.7797482451403888
+  },
+  {
+   "season": "2024–25",
+   "buildings": 135210,
+   "complaints": 69910,
+   "any_rate": 0.08312994600991051,
+   "chronic_rate": 0.022905110568744915,
+   "share_of_complaints_from_chronic": 0.7985266771563438
+  },
+  {
+   "season": "2025–26",
+   "buildings": 135367,
+   "complaints": 91395,
+   "any_rate": 0.09845087798355581,
+   "chronic_rate": 0.028744080905981517,
+   "share_of_complaints_from_chronic": 0.8216204387548554
+  }
+ ],
+ "rates_2025": {
+  "by_units": [
+   {
+    "group": "1–2",
+    "buildings": 59688,
+    "any_rate": 0.042236295402761026,
+    "chronic_rate": 0.00505964347942635,
+    "complaints_per_100_units": 6.035032583075288
+   },
+   {
+    "group": "3–5",
+    "buildings": 46334,
+    "any_rate": 0.052143134631156385,
+    "chronic_rate": 0.006733716061639401,
+    "complaints_per_100_units": 4.212994860968009
+   },
+   {
+    "group": "6–19",
+    "buildings": 18455,
+    "any_rate": 0.2176104036846383,
+    "chronic_rate": 0.058574911947981576,
+    "complaints_per_100_units": 13.31299358582376
+   },
+   {
+    "group": "20–49",
+    "buildings": 3855,
+    "any_rate": 0.5603112840466926,
+    "chronic_rate": 0.2697795071335927,
+    "complaints_per_100_units": 19.00989616340857
+   },
+   {
+    "group": "50+",
+    "buildings": 3080,
+    "any_rate": 0.6217532467532467,
+    "chronic_rate": 0.36688311688311687,
+    "complaints_per_100_units": 10.65167452545037
+   }
+  ],
+  "by_era": [
+   {
+    "group": "Before 1920",
+    "buildings": 46264,
+    "any_rate": 0.07346965242953485,
+    "chronic_rate": 0.01660038042538475
+   },
+   {
+    "group": "1920–39",
+    "buildings": 57020,
+    "any_rate": 0.11792353560154333,
+    "chronic_rate": 0.03639074009119607
+   },
+   {
+    "group": "1940–69",
+    "buildings": 14862,
+    "any_rate": 0.0929215448795586,
+    "chronic_rate": 0.03808370340465617
+   },
+   {
+    "group": "1970–99",
+    "buildings": 6693,
+    "any_rate": 0.09218586582997161,
+    "chronic_rate": 0.024204392649036306
+   },
+   {
+    "group": "2000 or later",
+    "buildings": 10528,
+    "any_rate": 0.1145516717325228,
+    "chronic_rate": 0.030395136778115502
+   }
+  ]
+ },
+ "persistence_2025": {
+  "any_given_any_last_season": 0.5605078575867886,
+  "any_given_none_last_season": 0.05651711467801199,
+  "chronic_given_chronic_last_season": 0.5940626008389803,
+  "chronic_given_not_chronic_last_season": 0.015498835697220794
+ },
+ "monthly_share": [
+  {
+   "month": "Oct",
+   "share": 0.09215593093417433
+  },
+  {
+   "month": "Nov",
+   "share": 0.16356043259745684
+  },
+  {
+   "month": "Dec",
+   "share": 0.18856007257959995
+  },
+  {
+   "month": "Jan",
+   "share": 0.21872668884376664
+  },
+  {
+   "month": "Feb",
+   "share": 0.1460146023242753
+  },
+  {
+   "month": "Mar",
+   "share": 0.09649342607393327
+  },
+  {
+   "month": "Apr",
+   "share": 0.06376060252588528
+  },
+  {
+   "month": "May",
+   "share": 0.030728244120908396
+  }
+ ],
+ "deployment": {
+  "buildings": 135367,
+  "with_coordinates": 134937,
+  "season_to_date_buildings": 4324,
+  "season_to_date_complaints": 14737,
+  "chronic_risk_median": 0.0024,
+  "chronic_risk_max": 0.9935,
+  "expected_complaints_total": 96485.274
+ }
+}

@@ -1,0 +1,10 @@
+
+/* TenantShield Plus additions. Card containers use keys that start with "plus_". */
+[class*="st-key-plus_"] {background:#FFF; border-radius:16px; box-shadow:0 4px 24px #011F5B05;}
+.st-key-plus_estimates, .st-key-plus_season {border-top:3px solid var(--navy);}
+[class*="st-key-plus_"] [data-testid="stMetricValue"] {font-size:1.6rem;}
+.st-key-plus_season [data-testid="stMetricValue"] {color:var(--teal);}
+.ts-plus-question {margin:.15rem 0 .6rem; padding-left:1.1rem;}
+.ts-plus-question li {margin-bottom:.45rem; line-height:1.55;}
+[class*="st-key-plus_"] .ts-risk-note {margin-bottom:.75rem;}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {color:#AEBED9;}
